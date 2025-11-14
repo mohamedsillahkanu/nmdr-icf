@@ -1,5 +1,5 @@
 services:
-  - type: web
+  - type: web 
     name: dhis2-nmdr
     runtime: docker
     dockerfilePath: ./Dockerfile
