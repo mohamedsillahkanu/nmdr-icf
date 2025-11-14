@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: dhis2-nmdr
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: standard
+    region: oregon
+    autoDeploy: true
+    healthCheckPath: /dhis-web-commons/security/login.action
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dhis2-nmdr-db
+          property: connectionString
+      - key: DB_HOST
+        fromDatabase:
+          name: dhis2-nmdr-db
+          property: host
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        fromDatabase:
+          name: dhis2-nmdr-db
+          property: databaseName
+      - key: DB_USERNAME
+        fromDatabase:
+          name: dhis2-nmdr-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: dhis2-nmdr-db
+          property: password
+      - key: SERVER_URL
+        value: https://dhis2-nmdr.onrender.com
+      - key: ENCRYPTION_PASSWORD
+        generateValue: true
+      - key: FILESTORE_PROVIDER
+        value: filesystem
+      - key: FILESTORE_CONTAINER
+        value: files
+      - key: DHIS2_HOME
+        value: /opt/dhis2
+      - key: CATALINA_OPTS
+        value: "-Xms1024m -Xmx2048m"
+
+databases:
+  - name: dhis2-nmdr-db
+    databaseName: dhis2
+    user: dhis
+    plan: standard
+    region: oregon
+    postgresMajorVersion: 15
